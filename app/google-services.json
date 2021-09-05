@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "241829748316",
+    "project_id": "flaze-97f0e",
+    "storage_bucket": "flaze-97f0e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241829748316:android:418dc8defc064c40439099",
+        "android_client_info": {
+          "package_name": "com.flaze.tracer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "241829748316-t6d0j3ab5p7jcuojogcpdbih6ai8ltfc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGa9s2QavvyTM5du_zlkna3suh_Qejrxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "241829748316-t6d0j3ab5p7jcuojogcpdbih6ai8ltfc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
