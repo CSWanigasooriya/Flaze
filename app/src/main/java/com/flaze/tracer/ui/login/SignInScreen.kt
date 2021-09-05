@@ -18,11 +18,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.flaze.tracer.R
-import com.flaze.tracer.ui.theme.FlazeTheme
+import com.flaze.tracer.data.model.Screen
 import com.flaze.tracer.utils.LoadingState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -31,8 +32,9 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+
 @Composable
-fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
+fun SignInScreen(viewModel: SignInScreenViewModel = viewModel(), navController: NavController) {
 
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
@@ -41,16 +43,17 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
     val state by viewModel.loadingState.collectAsState()
 
     // Equivalent of onActivityResult
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-        try {
-            val account = task.getResult(ApiException::class.java)!!
-            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-            viewModel.signWithCredential(credential)
-        } catch (e: ApiException) {
-            Log.w("TAG", "Google sign in failed", e)
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+                viewModel.signWithCredential(credential)
+            } catch (e: ApiException) {
+                Log.w("TAG", "Google sign in failed", e)
+            }
         }
-    }
 
 
 
@@ -59,13 +62,24 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
         topBar = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 TopAppBar(
-                    backgroundColor = Color.White,
                     elevation = 1.dp,
                     title = {
-                        Text(text = "Login")
+                        Text(text = stringResource(id = R.string.common_signin_button_text))
                     },
                     navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { navController.navigate(Screen.Home.route){
+                            // Pop up to the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            // Avoid multiple copies of the same destination when
+                            // reselecting the same item
+                            launchSingleTop = true
+                            // Restore state when reselecting a previously selected item
+                            restoreState = true
+                        } }) {
                             Icon(
                                 imageVector = Icons.Rounded.ArrowBack,
                                 contentDescription = null,
@@ -118,13 +132,18 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
                     )
 
                     Button(
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
                         enabled = userEmail.isNotEmpty() && userPassword.isNotEmpty(),
                         content = {
-                            Text(text = "Login")
+                            Text(text = stringResource(id = R.string.common_signin_button_text))
                         },
                         onClick = {
-                            viewModel.signInWithEmailAndPassword(userEmail.trim(), userPassword.trim())
+                            viewModel.signInWithEmailAndPassword(
+                                userEmail.trim(),
+                                userPassword.trim()
+                            )
                         }
                     )
 
@@ -132,22 +151,24 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.caption,
-                        text = "Login with"
+                        text = "or"
                     )
 
-                    Spacer(modifier = Modifier.height(18.dp))
-
                     val context = LocalContext.current
-                    val token = stringResource(R.string.default_web_client_id)
+                    val token = "241829748316-t6d0j3ab5p7jcuojogcpdbih6ai8ltfc.apps.googleusercontent.com"
+
 
                     OutlinedButton(
                         border = ButtonDefaults.outlinedBorder.copy(width = 1.dp),
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
                         onClick = {
-                            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                .requestIdToken(token)
-                                .requestEmail()
-                                .build()
+                            val gso =
+                                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestIdToken(token)
+                                    .requestEmail()
+                                    .build()
 
                             val googleSignInClient = GoogleSignIn.getClient(context, gso)
                             launcher.launch(googleSignInClient.signInIntent)
@@ -166,7 +187,7 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
                                     Text(
                                         style = MaterialTheme.typography.button,
                                         color = MaterialTheme.colors.onSurface,
-                                        text = "Google"
+                                        text = stringResource(id = R.string.common_signin_button_text_long)
                                     )
                                     Icon(
                                         tint = Color.Transparent,
@@ -178,25 +199,31 @@ fun LoginScreen(viewModel: LoginScreenViewModel = viewModel()) {
                         }
                     )
 
-                    when(state.status) {
+                    when (state.status) {
                         LoadingState.Status.SUCCESS -> {
                             Text(text = "Success")
+                            navController.navigate(Screen.Home.route){
+                                // Pop up to the start destination of the graph to
+                                // avoid building up a large stack of destinations
+                                // on the back stack as users select items
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                // Avoid multiple copies of the same destination when
+                                // reselecting the same item
+                                launchSingleTop = true
+                                // Restore state when reselecting a previously selected item
+                                restoreState = true
+                            }
                         }
                         LoadingState.Status.FAILED -> {
                             Text(text = state.msg ?: "Error")
                         }
-                        else -> {}
+                        else -> {
+                        }
                     }
                 }
             )
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    FlazeTheme(false) {
-        LoginScreen()
-    }
 }
