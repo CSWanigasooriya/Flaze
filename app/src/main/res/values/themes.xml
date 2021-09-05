@@ -1,22 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!--Splash screen theme.-->
     <style name="Theme.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/material_white</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
         <item name="postSplashScreenTheme">@style/Theme.Flaze</item>
     </style>
 
-
-
     <!-- Base application theme. -->
     <style name="Theme.Flaze" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/material_cyan900</item>
-        <item name="colorPrimaryVariant">@color/material_cyan800</item>
-        <item name="colorOnPrimary">@color/material_white</item>
+        <item name="colorPrimary">@color/navy_700</item>
+        <item name="colorPrimaryVariant">@color/navy_900</item>
+        <item name="colorOnPrimary">@color/material_black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/material_teal100</item>
-        <item name="colorSecondaryVariant">@color/material_teal100</item>
+        <item name="colorSecondary">@color/green_300</item>
+        <item name="colorSecondaryVariant">@color/green_900</item>
         <item name="colorOnSecondary">@color/material_black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>

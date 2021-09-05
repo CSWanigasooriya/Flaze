@@ -2,6 +2,14 @@ package com.flaze.tracer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+//Base Colors
+val navy_500 = Color(0xFF64869B)
+val navy_700 = Color(0xFF37596D)
+val navy_900 = Color(0xFF073042)
+
+val green_300 = Color(0xFF3DDC84)
+val green_500 = Color(0xFF00A956)
+val green_900 = Color(0xFF007217)
 
 //Material Colors
 val red50 = Color(0xFFFFEBEE)

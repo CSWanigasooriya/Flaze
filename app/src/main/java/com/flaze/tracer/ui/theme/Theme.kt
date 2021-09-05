@@ -9,15 +9,15 @@ import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = cyan400,
-    primaryVariant = black,
-    secondary = teal200
+    primary = navy_500,
+    primaryVariant = navy_900,
+    secondary = green_300
 )
 
 private val LightColorPalette = lightColors(
-    primary = cyan800,
-    primaryVariant = cyan900,
-    secondary = teal200,
+    primary = navy_700,
+    primaryVariant = navy_900,
+    secondary = green_300,
 
     //Other default colors to override
     background = white,
@@ -45,8 +45,7 @@ fun FlazeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable(
         // Update all of the system bar colors to be transparent, and use
         // dark icons if we're in light theme
         systemUiController.setStatusBarColor(
-            color = colors.primaryVariant,
-            darkIcons = darkTheme
+            color = colors.primaryVariant
         )
 
         // setStatusBarsColor() and setNavigationBarsColor() also exist
